@@ -11,7 +11,6 @@ import { MovieService } from './movie.service';
 })
 export class App implements OnInit {
   results: any[] = [];
-  // URL Base para las imágenes de TMDB
   imageBaseUrl: string = 'https://image.tmdb.org/t/p/w500';
 
   constructor(private movieService: MovieService) {}
@@ -19,9 +18,12 @@ export class App implements OnInit {
   ngOnInit() {
     this.movieService.getCine().subscribe({
       next: (data) => {
+        console.log('¡Datos llegaron al navegador!', data.results); // Verifica esto en F12
         this.results = data.results;
       },
-      error: (err) => console.error('Error de API:', err)
+      error: (err) => {
+        console.error('Error cargando pelis:', err);
+      }
     });
   }
 }

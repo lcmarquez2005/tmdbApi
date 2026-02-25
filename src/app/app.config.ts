@@ -1,11 +1,14 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+// 1. Asegúrate de importar withFetch
+import { provideHttpClient, withFetch } from '@angular/common/http'; 
+
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient() // <--- Esto es obligatorio
+    // 2. Agrega withFetch() dentro de provideHttpClient()
+    provideHttpClient(withFetch()) 
   ]
 };
