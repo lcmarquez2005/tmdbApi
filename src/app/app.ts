@@ -1,4 +1,3 @@
-// src/app/app.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MovieService } from './movie.service';
@@ -12,6 +11,8 @@ import { MovieService } from './movie.service';
 })
 export class App implements OnInit {
   results: any[] = [];
+  // URL Base para las imágenes de TMDB
+  imageBaseUrl: string = 'https://image.tmdb.org/t/p/w500';
 
   constructor(private movieService: MovieService) {}
 
@@ -19,8 +20,6 @@ export class App implements OnInit {
     this.movieService.getCine().subscribe({
       next: (data) => {
         this.results = data.results;
-        // 👇 BORRA ESTA LÍNEA 👇
-        // console.log('Películas recibidas:', this.results); 
       },
       error: (err) => console.error('Error de API:', err)
     });
