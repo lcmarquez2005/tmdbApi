@@ -1,31 +1,30 @@
 import { Component, inject, signal } from '@angular/core';
 import { MovieService, Movie, DiscoverParams } from '../services/movie.service';
-import { FormsModule } from '@angular/forms'; // Necesario para ngModel
-import { CommonModule } from '@angular/common'; // Para directivas comunes como @if, @for
+import { FormsModule } from '@angular/forms';
+import { CommonModule, DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-discover-movies',
-  standalone: true, // Asumo que usan componentes standalone por la estructura
-  imports: [FormsModule, CommonModule], // Importamos lo necesario
+  standalone: true,
+  imports: [FormsModule, CommonModule, DecimalPipe],
   templateUrl: './discover-movies.component.html'
-//   styleUrls: ['./discover-movies.component.css'] // O .scss
 })
 export class DiscoverMoviesComponent {
   private readonly movieService = inject(MovieService);
 
-  // Señales para el estado del componente
-  region = signal<string>('');      // Ej. 'DE', 'US', 'MX'
-  fromDate = signal<string>('');    // Ej. '2024-01-01'
-  toDate = signal<string>('');      // Ej. '2024-01-31'
-  releaseTypes = signal<string>(''); // Ej. '3' (Theatrical), '2|3' (Limited + Theatrical)
+  // Strings normales para ngModel (signals no funcionan bien con ngModel directamente)
+  region = '';
+  fromDate = '';
+  toDate = '';
+  releaseTypes = '';
+
   movies = signal<Movie[]>([]);
   isLoading = signal<boolean>(false);
   errorMessage = signal<string>('');
 
   discover() {
-    // Validación básica
-    if (!this.region()) {
-      this.errorMessage.set('Por favor, introduce un código de región (ej. DE, US, MX).');
+    if (!this.region.trim()) {
+      this.errorMessage.set('Por favor, introduce un código de región (ej. MX, US, DE).');
       return;
     }
 
@@ -33,23 +32,21 @@ export class DiscoverMoviesComponent {
     this.errorMessage.set('');
     this.movies.set([]);
 
-    // Construimos los parámetros dinámicamente, solo si tienen valor
     const params: DiscoverParams = {
-      language: 'es-MX', // Podrías hacer esto configurable también
-      region: this.region(),
+      language: 'es-MX',
+      region: this.region.trim().toUpperCase(),
     };
 
-    if (this.fromDate()) {
-      params['release_date.gte'] = this.fromDate();
+    if (this.fromDate) {
+      params['release_date.gte'] = this.fromDate;
     }
-    if (this.toDate()) {
-      params['release_date.lte'] = this.toDate();
+    if (this.toDate) {
+      params['release_date.lte'] = this.toDate;
     }
-    if (this.releaseTypes()) {
-      params['with_release_type'] = this.releaseTypes();
+    if (this.releaseTypes.trim()) {
+      params['with_release_type'] = this.releaseTypes.trim();
     }
 
-    // Llamamos al NUEVO método del servicio
     this.movieService.discoverMovies(params).subscribe({
       next: (response) => {
         this.movies.set(response.results);
@@ -63,7 +60,6 @@ export class DiscoverMoviesComponent {
     });
   }
 
-  // Podemos reusar el método del servicio para las imágenes
   getPosterUrl(path: string | null): string {
     return this.movieService.getMoviePosterUrl(path);
   }
