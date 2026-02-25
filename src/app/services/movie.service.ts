@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { TMDB_API_CONFIG } from '../config/tmdb.config';
 
 export interface Movie {
@@ -34,7 +35,9 @@ export class MovieService {
         query: query,
         page: page.toString()
       }
-    });
+    }).pipe(
+      tap(response => console.log('Respuesta de TMDB API:', response))
+    );
   }
 
   getMoviePosterUrl(posterPath: string | null): string {
