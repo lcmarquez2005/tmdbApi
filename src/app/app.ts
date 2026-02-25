@@ -19,7 +19,8 @@ export class App implements OnInit {
     this.movieService.getCine().subscribe({
       next: (data) => {
         this.results = data.results;
-        console.log('Películas recibidas:', this.results); // <--- Esto te mostrará en consola si llegaron
+        // 👇 BORRA ESTA LÍNEA 👇
+        // console.log('Películas recibidas:', this.results); 
       },
       error: (err) => console.error('Error de API:', err)
     });
