@@ -2,11 +2,7 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm",
-    "analytics": "a0eeef2d-7560-40be-b7c9-4df665fa885e",
-    "cache": {
-      "path": "C:/Users/Rodrigo/.angular-cache"
-    }
+    "packageManager": "npm"
   },
   "newProjectRoot": "projects",
   "projects": {
