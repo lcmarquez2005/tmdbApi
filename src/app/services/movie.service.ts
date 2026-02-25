@@ -46,4 +46,28 @@ export class MovieService {
     }
     return `https://image.tmdb.org/t/p/w200${posterPath}`;
   }
+
+   discoverMovies(params: DiscoverParams): Observable<MovieSearchResponse> {
+    // Construimos los parámetros, asegurándonos de incluir siempre la API key
+    const httpParams: any = {
+      api_key: this.apiKey,
+      ...params // Expandimos los parámetros que nos pasan
+    };
+
+    return this.httpClient.get<MovieSearchResponse>(`${this.baseUrl}/discover/movie`, {
+      params: httpParams
+    });
+  }
+}
+
+
+//INTERFAZ: Para los parámetros de discover
+export interface DiscoverParams {
+  language?: string;   // ej. 'de-DE'
+  region?: string;     // ej. 'DE'
+  'release_date.gte'?: string; // ej. '2016-11-16' (formato YYYY-MM-DD)
+  'release_date.lte'?: string; // ej. '2016-12-02'
+  'with_release_type'?: string; // ej. '2|3' (los IDs separados por |)
+
+  
 }
